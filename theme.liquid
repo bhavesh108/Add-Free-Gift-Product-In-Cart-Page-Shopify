@@ -1,0 +1,25 @@
+{% comment %} 
+    include snippet inside Ajax cart drawer 
+{% endcomment %}
+    
+<div id="CartDrawer" class="drawer drawer--right">
+    <div class="cart-header">
+    <div class="cart-title">
+        <div class="newItem"><i class="fa fa-check" aria-hidden="true"></i> An item was added to cart{{ settings.cart-title }}</div>
+        <div class="title"></div>
+    </div>
+    <div class="cart-close js-drawer-close">
+        <button type="button" class="icon-fallback-text">
+        <span class="close-x left" ></span> <span class="close-x right" ></span>
+        </button>
+        <span class="close-text">Close<span>
+    </div>
+    <div class="shippingText">Shiping Free On Orders Over $300.00</div>
+    </div>
+    <div id="CartContainer"></div>
+    
+    {% comment %} snippet added {% endcomment %}
+    {% render 'cart-gift-product'  %} 
+
+    <div class='app-main-title'>{{ settings.ordertitle }} </div> 
+</div>
