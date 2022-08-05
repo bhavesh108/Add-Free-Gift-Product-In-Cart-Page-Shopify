@@ -1,0 +1,73 @@
+{% comment %} 
+    add this file as snippet 
+{% endcomment %}
+<script>
+
+
+window.addingFreeGift = false;
+
+//eligible product handles for free gift
+var freeGiftProOn = ["add-hanlde", "add-hanlde", "add-hanlde", "add-hanlde"];
+//free gift Id
+var giftproID = 6679468736583;
+
+function addGiftProductCart(){
+  
+  //if function already executing, return
+  if(window.addingFreeGift)
+    return;
+  
+  window.addingFreeGift = true;
+    
+    $.getJSON('/cart.js?ran='+(Math.random() * 1000) + 1, function (cart, textStatus) {
+ 
+        var gcproductInCart = false;
+        var backpackinCart = false;
+
+        for( var i=0; i<cart.items.length; i++ ) {
+
+            if( cart.items[i].product_id == giftproID ) //if gift already in cart
+                gcproductInCart = true;
+
+            if( $.inArray( cart.items[i].product_title, freeGiftProOn ) !== -1 ){ //check if eligible item exists in cart
+                backpackinCart = true; 
+            }
+
+            if( cart.items[i].price == 0 ){ //hie qty control for zero price item in cart
+              if( window.location.href.indexOf("/cart") != -1 ) {
+                $("form.cart .cart__row:eq("+ (i+1) +")").find(".js-qty__adjust").addClass("hide");
+                $("form.cart .cart__row:eq("+ (i+1) +")").find(".js-qty__num").prop("disabled", true);
+              }
+            }
+        }
+
+        //add gift
+        if( backpackinCart && !gcproductInCart ){
+            jQuery.ajax({
+                type: "POST",
+                url: '/cart/add.js',
+                data: 'quantity=1&id=6679468736583',             
+                async: false,
+            });
+            ajaxCart.load();
+        }
+
+        //if doesn't meet criteria, remove gift
+        if( !backpackinCart && gcproductInCart ){
+            console.log("remove GC");
+            jQuery.ajax({
+                type: "POST",
+                url: '/cart/change.js',
+                data: 'quantity=0&id=6679468736583',             
+                async: false,
+            });
+            ajaxCart.load();
+        }
+
+      
+      	window.addingFreeGift = false;
+
+    });
+}
+
+</script>
